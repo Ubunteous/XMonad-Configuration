@@ -1,0 +1,7 @@
+#+title: XMonad configuration
+
+The bulk of this configuration is in /lib
+
++ The main layouts are Tall and Full accompanied by Grid and BSP
++ XMobar is not used. The files related to it are mere drafts
++ The fade hook overrides picom's configuration
