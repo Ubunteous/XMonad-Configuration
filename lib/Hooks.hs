@@ -1,7 +1,8 @@
 module Hooks where
 
 import XMonad    
-import XMonad.Hooks.ManageHelpers (isDialog)
+import qualified XMonad.StackSet as W (swapUp)
+import XMonad.Hooks.ManageHelpers (isDialog, doCenterFloat)
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
 
 import XMonad.Hooks.RefocusLast
@@ -13,11 +14,14 @@ import XMonad.Hooks.FadeWindows
 -- Make some apps (including gimp) float by default
 myManageHook :: ManageHook
 myManageHook = composeAll
-    [ className =? "Gimp-2.10" --> doFloat -- find name with xprop
-    , isDialog --> doFloat
+    [ className =? "Gimp-2.10" --> doCenterFloat -- find name with xprop
+    , isDialog --> doF W.swapUp
     , insertPosition End Newer -- open new windows at the end
-    -- -> doCenterFloat insertPosition Master Newer
+    -- Options: doFloat vs doCenterFloat
+    -- Options for insertPosition: Focus (Newer/Older) and Position (Master, End, Above, Below)
     ]
+
+
 
 myLogHook = refocusLastLogHook <> updatePointer (0.5, 0.5) (0.5, 0.5) <> fadeWindowsLogHook myFadeHook
 
