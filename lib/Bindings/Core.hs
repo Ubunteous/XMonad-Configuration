@@ -18,6 +18,7 @@ core =
     -- , ("M-S-<Return>", spawn "[[ $(($RANDOM % 2)) = 1 ]] && alacritty || kitty") -- spawn random terminal
 
     , ("M-S-<Return>", spawn "if [ $(shuf -i 0-1 -n 1) = 1 ]; then alacritty; else kitty; fi")
+    , ("M-!", spawn "xkbset bell sticky -twokey -latchlock feedback led stickybeep")
       
     , ("M-x", bindFirst [(className =? "Emacs", pure ()), (pure True, kill)]) -- do not kill emacs by mistake with M-x
     , ("M-p", spawn "rofi -show drun")
