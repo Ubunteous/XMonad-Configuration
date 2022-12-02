@@ -30,7 +30,7 @@ myLayout = custom . hiddenWindows $
                  
       full = Full
       bsp = renamed [Replace "BSP"] emptyBSP
-      rTall = limitWindows 3 $ ResizableTall 1 (1/20) (1/2) []
+      rTall = limitSelect 1 2 $ ResizableTall 1 (1/20) (1/2) []
       grid = GridRatio (4/3)
       tallGrid = renamed [Replace "Tall Grid"] $ (IfMax 4 rTall grid)
 
