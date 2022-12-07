@@ -10,6 +10,7 @@ import XMonad.Prompt.XMonad
 import XMonad.Prompt.Zsh
 import XMonad.Prompt.FuzzyMatch
 
+import qualified Data.Map as M
 import qualified XMonad.Prompt as P
 import qualified XMonad.StackSet as W
 import qualified XMonad.Actions.Submap as SM
