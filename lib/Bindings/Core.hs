@@ -18,7 +18,7 @@ core =
     -- , ("M-S-<Return>", spawn "[[ $(($RANDOM % 2)) = 1 ]] && alacritty || kitty") -- spawn random terminal
 
     , ("M-S-<Return>", spawn "if [ $(shuf -i 0-1 -n 1) = 1 ]; then alacritty; else kitty; fi")
-    , ("M-!", spawn "xkbset bell sticky -twokey -latchlock feedback led stickybeep")
+    , ("M-<", spawn "xkbset bell sticky -twokey -latchlock feedback led stickybeep")
       
     , ("M-x", bindFirst [(className =? "Emacs", pure ()), (pure True, kill)]) -- do not kill emacs by mistake with M-x
     , ("M-p", spawn "rofi -show drun")
@@ -29,9 +29,9 @@ core =
     , ("M-$", spawn "~/.config/rofi/powermenu.sh")      
 
     -- function keys
-    , ("<XF86AudioMute>", spawn "pamixer -t")
-    , ("<XF86AudioLowerVolume>", spawn "pamixer -d 10")
-    , ("<XF86AudioRaiseVolume>", spawn "pamixer -i 10")
+    , ("<XF86AudioMute>", spawn "pamixer -t && dunstify \"Volume toggled: $(pamixer --get-volume-human)\" -t 800 -r '2345'")
+    , ("<XF86AudioLowerVolume>", spawn "pamixer -d 10 && dunstify \"Volume lowered: $(pamixer --get-volume-human)\" -t 800 -r '2345'")
+    , ("<XF86AudioRaiseVolume>", spawn "pamixer -i 10 && dunstify \"Volume increased: $(pamixer --get-volume-human)\" -t 800 -r '2345'")
     , ("<XF86MonBrightnessDown>", spawn "brightnessctl set 5%-")
     , ("<XF86MonBrightnessUp>", spawn "brightnessctl set +5%")
     , ("<Print>", spawn "flameshot screen")
