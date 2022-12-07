@@ -2,7 +2,6 @@ module Bindings.Prompts where
 
 import XMonad
 import XMonad.Actions.Search
-import qualified XMonad.Prompt as P
 import XMonad.Prompt.Man
 import XMonad.Prompt.Shell
 import XMonad.Prompt.Window
@@ -10,10 +9,10 @@ import XMonad.Prompt.Workspace
 import XMonad.Prompt.XMonad
 import XMonad.Prompt.Zsh
 import XMonad.Prompt.FuzzyMatch
-    
+
+import qualified XMonad.Prompt as P
 import qualified XMonad.StackSet as W
-import qualified Data.Map as M -- see XMonad.Doc.Extending
-import qualified Bindings.Module.Submap as SM -- get 17.1 features
+import qualified XMonad.Actions.Submap as SM
     
 prompt = [ ("M-d", SM.visualSubmap def $ M.fromList $ map (\(k, s, a) -> ((0, k), (s, a)))
                   [ (xK_q, "man", manPrompt myPromptConfig)
