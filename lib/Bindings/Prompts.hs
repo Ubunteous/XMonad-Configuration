@@ -15,18 +15,22 @@ import qualified XMonad.Prompt as P
 import qualified XMonad.StackSet as W
 import qualified XMonad.Actions.Submap as SM
     
-prompt = [ ("M-d", SM.visualSubmap def $ M.fromList $ map (\(k, s, a) -> ((0, k), (s, a)))
-                  [ (xK_q, "man", manPrompt myPromptConfig)
-                  , (xK_s, "shell", shellPrompt myPromptConfig)
-                  , (xK_d, "window", windowMultiPrompt myPromptConfig [(Goto, allWindows), (Bring, wsWindows), (Goto, wsWindows)])
-                  , (xK_f, "window -> ws", workspacePrompt myPromptConfig (windows . W.shift))
-                  , (xK_g, "xmonad", xmonadPrompt myPromptConfig)
-                  , (xK_h, "zsh", zshPrompt myPromptConfig "/etc/profiles/per-user/ubunteous/bin/zsh")
-                  , (xK_j, "internet", promptSearch myPromptConfig google)
+prompt = [ ("M-r", promptSearch myPromptConfig google)
+         , ("M-g", promptSearch myPromptConfig google)
+         , ("M-;", promptSearch myPromptConfig google)
 
-                  -- Goto, Bring, BringCopy, BringToMaster, WithWindow String (Window -> X ())
-                  , (xK_k, "bring window", windowPrompt myPromptConfig Bring allWindows) -- { P.autoComplete = Just 500000 }
-                  ])]
+         , ("M-d", SM.visualSubmap def $ M.fromList $ map (\(k, s, a) -> ((0, k), (s, a)))
+                     [ (xK_q, "man", manPrompt myPromptConfig)
+                     , (xK_s, "shell", shellPrompt myPromptConfig)
+                     , (xK_d, "window", windowMultiPrompt myPromptConfig [(Goto, allWindows), (Bring, wsWindows), (Goto, wsWindows)])
+                     , (xK_f, "window -> ws", workspacePrompt myPromptConfig (windows . W.shift))
+                     , (xK_g, "xmonad", xmonadPrompt myPromptConfig)
+                     , (xK_h, "zsh", zshPrompt myPromptConfig "/etc/profiles/per-user/ubunteous/bin/zsh")
+                     , (xK_j, "internet", promptSearch myPromptConfig google)
+
+                     -- Goto, Bring, BringCopy, BringToMaster, WithWindow String (Window -> X ())
+                     , (xK_k, "bring window", windowPrompt myPromptConfig Bring allWindows) -- { P.autoComplete = Just 500000 }
+                     ])]
          
 
 myBackgroundColor = "#151515"
@@ -37,7 +41,7 @@ myPromptConfig = def
                  , P.promptBorderWidth = 0
                  , P.defaultText = ""
                  , P.alwaysHighlight = True
-                 , P.historySize = 0
+                 , P.historySize = 8
                  , P.height = 64
                  , P.font = "xft:DejaVu Sans Condensed-20:normal"
                  , P.bgColor = myBackgroundColor
