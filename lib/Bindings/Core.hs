@@ -29,12 +29,16 @@ core =
     , ("M-$", spawn "~/.config/rofi/powermenu.sh")      
 
     -- function keys
-    , ("<XF86AudioMute>", spawn "pamixer -t && dunstify \"Volume toggled: $(pamixer --get-volume-human)\" -t 800 -r '2345'")
-    , ("<XF86AudioLowerVolume>", spawn "pamixer -d 10 && dunstify \"Volume lowered: $(pamixer --get-volume-human)\" -t 800 -r '2345'")
-    , ("<XF86AudioRaiseVolume>", spawn "pamixer -i 10 && dunstify \"Volume increased: $(pamixer --get-volume-human)\" -t 800 -r '2345'")
-    , ("<XF86MonBrightnessDown>", spawn "brightnessctl set 5%-")
-    , ("<XF86MonBrightnessUp>", spawn "brightnessctl set +5%")
+    -- can be improved by creating a script which shows a different icon if mute toggle leads to 0 or full sound with sound on/off string
+    , ("<XF86AudioMute>", spawn "pamixer -t && dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Sound'")
+    , ("<XF86AudioLowerVolume>", spawn "pamixer -d 10 && dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Sound'")
+    , ("<XF86AudioRaiseVolume>", spawn "pamixer -i 10 && dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Sound'")
+    , ("<XF86MonBrightnessDown>", spawn "brightnessctl set 5%- && dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness'")
+    , ("<XF86MonBrightnessUp>", spawn "brightnessctl set +5% && dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness'")
     , ("<Print>", spawn "flameshot screen")
+
+      -- brightnessctl set +5%
+      -- dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Bright'
 
     , ("M-q", spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
     -- scratchpads
