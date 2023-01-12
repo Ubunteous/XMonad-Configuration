@@ -58,8 +58,8 @@ myStartupHook = do
   -- spawn "/home/ubunteous/.config/polybar/launch.sh"
   spawnOnce "/home/ubunteous/.config/polybar/launch.sh"
   spawnOnce "picom --experimental-backends"
-  spawnOnOnce "1" "emacs"
-  spawnOnce "firefox"
+  spawnOnOnce "1" "emacs &"
+  spawnOnce "firefox &"
 
   -- check if there is an incorrect or duplicate key binding
   return ()
