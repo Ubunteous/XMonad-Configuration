@@ -1,0 +1,8 @@
+#+title: notes.org
+
+** XMonad
+
++ Change Sound +/- so that it disables mute if it is activated. Otherwise, increasing the sound does nothing
++ Since Alt-<arrow> and Ctrl-<arrow> have the same purpose, maybe Alt-<arrow> could instead serve to go to the next window in XMonad
+
+=> this may be a bad idea as touch typing will change my ease to do some shortcuts. Wait and see
