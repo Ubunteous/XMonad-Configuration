@@ -1,7 +1,12 @@
 #+title: XMonad configuration
 
-The bulk of this configuration is in /lib
+My current window manager configuration.
 
-+ The main layouts are Tall and Full accompanied by Grid and BSP
-+ XMobar is not used. The files related to it are mere drafts
-+ The fade hook overrides picom's configuration
+A few highlights:
+
++ EWMH compliance (useful for bars and other widgets)
++ The main layouts are BSP, Full and a variant of Tall which efficiently uses screen space by having 3 windows opened at once top and switches to a custom grid layout if many windows are needed at once
++ Workspaces are organised in trios to emphasise task separation
++ Many popular softwares (rofi, polybar, eww, flameshot) can be called with XMonad's key bindings
+
+You can get an overview of the code's structure by having a look at xmonad.hs
