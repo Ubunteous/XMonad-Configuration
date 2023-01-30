@@ -5,7 +5,7 @@ My current window manager configuration.
 A few highlights:
 
 + EWMH compliance (useful for bars and other widgets)
-+ The main layouts are BSP, Full and a variant of Tall which efficiently uses screen space by having 3 windows opened at once top and switches to a custom grid layout if many windows are needed at once
++ The main layouts are BSP, Full and a variant of Tall which efficiently uses screen space by having 3 windows opened at once top. It also switches to a custom grid layout if many windows are needed at once
 + Workspaces are organised in trios to emphasise task separation
 + Many popular softwares (rofi, polybar, eww, flameshot) can be called with XMonad's key bindings
 
