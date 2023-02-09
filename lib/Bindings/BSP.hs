@@ -46,8 +46,8 @@ bsp_bind = [ ("M-M1-<Left>", sendMessage $ ExpandTowards L)
 
            , ("M-s", sendMessage $ Swap)
            -- , ("M-r", sendMessage $ Rotate)
-           , ("M-c", sendMessage $ SplitShift Prev)
-           , ("M-v", sendMessage $ SplitShift Next)
+           , ("M-M1-c", sendMessage $ SplitShift Prev)
+           , ("M-M1-v", sendMessage $ SplitShift Next)
 
            -- , ("M-b", sendMessage $ Balance)
            ]
