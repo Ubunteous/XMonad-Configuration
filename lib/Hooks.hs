@@ -1,8 +1,8 @@
 module Hooks where
 
-import XMonad    
-import qualified XMonad.StackSet as W (swapDown)
-import XMonad.Hooks.ManageHelpers (isDialog, isFullscreen, doCenterFloat, doFullFloat)
+import XMonad
+import qualified XMonad.StackSet as W (swapDown, floating)
+import XMonad.Hooks.ManageHelpers (isDialog, isFullscreen, doCenterFloat)
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
 
 import XMonad.Hooks.RefocusLast
