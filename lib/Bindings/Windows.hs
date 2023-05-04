@@ -2,21 +2,20 @@ module Bindings.Windows where
     
 import XMonad
 -- import XMonad.Actions.CycleWindows
-import XMonad.Actions.RotSlaves
-import XMonad.Actions.Promote
-import XMonad.Actions.SwapPromote
+import XMonad.Actions.RotSlaves (rotSlavesUp, rotSlavesDown)
+import XMonad.Actions.Promote (promote)
+import XMonad.Actions.SwapPromote (swapPromote, swapHybrid)
 import XMonad.Actions.EasyMotion (selectWindow, EasyMotionConfig(..), ChordKeys(AnyKeys))
 import qualified XMonad.StackSet as W
-import XMonad.Actions.WindowGo
+import XMonad.Actions.WindowGo (raise, raiseBrowser)
 import qualified Data.Map as M -- see XMonad.Doc.Extending
-import XMonad.Layout.ToggleLayouts
-import XMonad.Layout.Hidden
+import XMonad.Layout.ResizableTile (MirrorResize(..))
+import XMonad.Layout.ToggleLayouts (ToggleLayout(..))
+import XMonad.Layout.Hidden (hideWindow, popOldestHiddenWindow)
 
-import XMonad.Layout.ResizableTile
-      
+
 window = [ ("M-b", sendMessage $ MirrorShrink)
          , ("M-n", sendMessage $ MirrorExpand)
-
 
          , ("M-o", (selectWindow def{cancelKey = xK_Escape}) >>= (`whenJust` windows . W.focusWindow))
          , ("M-S-o", (selectWindow def{
