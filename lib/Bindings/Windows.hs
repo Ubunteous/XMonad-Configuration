@@ -31,11 +31,11 @@ window = [ ("M-b", sendMessage $ MirrorShrink)
            
          -- , ("M-u", rotUnfocusedUp)
          -- , ("M-i", rotUnfocusedDown)
-         , ("M-f", sendMessage ToggleLayout)
+         , ("M-S-f", sendMessage ToggleLayout)
                           
            -- raise
          , ("M-a", raise (className =? "Emacs"))
-         , ("M-z", raiseBrowser)
+         , ("M-r", raiseBrowser)
             
            -- hidden
          , ("M-y" , withFocused hideWindow)
