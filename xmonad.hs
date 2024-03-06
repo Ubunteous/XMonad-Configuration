@@ -7,6 +7,7 @@ import XMonad.Util.EZConfig (additionalKeysP, checkKeymap)
 import qualified XMonad.StackSet as W
 import XMonad.Util.NamedScratchpad (namedScratchpadManageHook)
 import XMonad.Actions.Navigation2D
+import XMonad.Hooks.Modal (modal, noModMode)
 
 -- xmobar
 -- import XMobar
@@ -19,13 +20,15 @@ import Layouts
 import Hooks
 import Bindings.BSP
 import Bindings.Core
+import Bindings.Modes
 import Bindings.Prompts
 import Bindings.Windows
 import Bindings.Workspaces
 import Bindings.Navigation2D
-    
+
 main :: IO ()
 main = xmonad
+       . modal [noModMode, jobMode]
        . ewmhFullscreen
        . ewmh
        . docks -- for polybar
@@ -54,24 +57,32 @@ myConfig = def
 
    
 myStartupHook = do
-  -- start polybar. use spawn rather than spawnOnce to solve alsa problem
-  -- spawn "/home/ubunteous/.config/polybar/launch.sh"
-  spawnOnce "/home/ubunteous/.config/polybar/launch.sh"
-  spawnOnce "picom --experimental-backends"
-  spawnOnOnce "1" "emacs &"
-  spawnOnce "firefox &"
+  -- spawnOnce "/home/ubunteous/.config/polybar/launch.sh"
+  spawnOnce "eww daemon && eww open bar"
 
+  -- spawnOnce "screenkey -t .5 -s small --no-whitespace --mods-mode emacs"
+  -- spawnOnce "picom --experimental-backends"
+
+  spawnOnce "firefox &"
+  spawnOnOnce "1" "emacs &"
+
+  spawnOnce "if [ $(xrandr --query | grep -c 'HDMI-1 connected') -eq 1 ]; then xrandr --output eDP-1 --off --output HDMI-1 --auto; fi"
+                    
+  -- spawnOnce "kmonad $HOME/.nix.d/files/kmonad.kbd &"
+            
   -- check if there is an incorrect or duplicate key binding
   return ()
   checkKeymap myConfig (myKeys myConfig)
 
 
 myKeys conf@(XConfig {modMask = modMask}) =
-    core ++ workspace ++ prompt ++ window ++ bsp_bind ++ nav2d ++
+    core ++ workspace ++ prompt ++ window ++ bsp_bind ++ nav2d ++ modeKeys ++
 
     -- numbered workspaces
     [ ("M-" ++ modKey2 ++ [keyChar], windows $ windowOperation workspaceId)
     | (workspaceId, keyChar) <- zip (workspaces conf) "&é\"'(-è_ç"
     , (windowOperation, modKey2) <- [(W.greedyView, ""), (shift'n'view, "S-"), (W.shift, "C-")]]
 
-                                            
+
+-- shift window to workspace and follow it
+shift'n'view i = W.greedyView i . W.shift i
