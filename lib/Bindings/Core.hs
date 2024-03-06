@@ -1,53 +1,90 @@
 module Bindings.Core where
 
 import XMonad
-import XMonad.Util.NamedScratchpad
+import XMonad.Util.NamedScratchpad (NamedScratchpad(..), namedScratchpadAction, nonFloating)
 import XMonad.Actions.PerWindowKeys (bindFirst)
 import XMonad.Actions.WithAll (killOthers)
 
+-- Float
+import qualified XMonad.StackSet as W
+import XMonad.Hooks.Place (placeFocused, simpleSmart)
 -- Mouse
 import qualified Data.Map as M -- see XMonad.Doc.Extending
 import qualified XMonad.Actions.FlexibleManipulate as Flex
 
+-- import XMonad.Actions.CycleWS (shiftTo, Direction1D(Next), emptyWS)
+
+import XMonad.Hooks.Place (inBounds, underMouse)
+    
 core :: [(String, X())]
-core =
-    [ ("M-e", spawn "nemo")
-    , ("M-S-e", namedScratchpadAction scratchpads "nemo")
-
-    -- , ("M-S-<Return>", spawn "kitty")
-    -- , ("M-S-<Return>", spawn "[[ $(($RANDOM % 2)) = 1 ]] && alacritty || kitty") -- spawn random terminal
-
-    , ("M-S-<Return>", spawn "if [ $(shuf -i 0-1 -n 1) = 1 ]; then alacritty; else kitty; fi")
-    , ("M-<", spawn "xkbset bell sticky -twokey -latchlock feedback led stickybeep")
+core = [ ("M-e", spawn "nemo")
+       , ("M-b", placeFocused $ inBounds (underMouse (0.5, 0.5)))
+       -- , ("M-b", spawn "reaper")
+       -- , ("M-b", shiftTo Next emptyWS)
       
-    , ("M-x", bindFirst [(className =? "Emacs", pure ()), (pure True, kill)]) -- do not kill emacs by mistake with M-x
-    , ("M-p", spawn "rofi -show drun")
+       , ("M-S-s", spawn "~/.xmonad/lib/Bindings/commands.sh hdmi")
+       , ("M-C-S-s", spawn "xrandr --output eDP-1 --auto")
+  
+       , ("M-S-<Return>", spawn "wezterm")
+       -- , ("M-S-<Return>", spawn "[[ $(($RANDOM % 2)) = 1 ]] && alacritty || kitty") -- spawn random terminal
+       -- , ("M-S-<Return>", spawn "if [ $(shuf -i 0-1 -n 1) = 1 ]; then alacritty; else kitty; fi")
+       -- , ("M-S-<Return>", spawn "~/.xmonad/lib/Bindings/commands.sh randTerm")
+      
+       -- FLoating
+       , ("M-z", placeFocused simpleSmart)
+                   
+       -- do not kill emacs/reaper by mistake with M-x
+       , ("M-x", bindFirst [(className =? "Emacs" <||> className =? "REAPER", pure ()), (pure True, kill)])
+       , ("M-<", spawn "xkbset bell sticky -twokey -latchlock feedback led stickybeep")      
+       , ("M-S-k", killOthers)
 
-    , ("M-S-k", killOthers)
-    , ("M-C-p", spawn "polybar-msg cmd toggle")
-    , ("M-S-l", spawn "brightnessctl -s set 5 && i3lock -ueni ~/Pictures/gem_full.png; brightnessctl -r")
-    , ("M-$", spawn "~/.config/rofi/powermenu.sh")      
+       -- without this line, M-. changed the layout to
+       -- a single column (could also be a masterless tall). Was it a bug ?
+       , ("M-.", spawn "rofi -show drun")
+       , ("M-y", spawn "rofi -show drun")
+       , ("M-p", spawn "rofi -show drun")
+       , ("M-!", spawn "rofi -show drun") -- colemak
+       , ("M-/", spawn "rofi -show drun") -- colemak
+       , ("M-$", spawn "~/.config/rofi/powermenu.sh")      
+       -- , ("M-C-p", spawn "polybar-msg cmd toggle")
+       , ("M-C-p", spawn "~/.xmonad/lib/Bindings/commands.sh toggleBar")
+       , ("M-S-l", spawn "~/.xmonad/lib/Bindings/commands.sh lock")
+       , ("M-S-i", spawn "~/.xmonad/lib/Bindings/commands.sh lock")
 
-    -- function keys
-    -- can be improved by creating a script which shows a different icon if mute toggle leads to 0 or full sound with sound on/off string
-    , ("<XF86AudioMute>", spawn "pamixer -t && dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Sound'")
-    , ("<XF86AudioLowerVolume>", spawn "pamixer -d 10 && dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Sound'")
-    , ("<XF86AudioRaiseVolume>", spawn "pamixer -i 10 && dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Sound'")
-    , ("<XF86MonBrightnessDown>", spawn "brightnessctl set 5%- && dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness'")
-    , ("<XF86MonBrightnessUp>", spawn "brightnessctl set +5% && dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness'")
-    , ("<Print>", spawn "flameshot screen")
+       -- function keys
+       -- can be improved by creating a script which shows a different icon if mute toggle leads to 0 or full sound with sound on/off string
+       , ("<XF86AudioMute>", spawn "~/.xmonad/lib/Bindings/commands.sh audioMute")
+       , ("<XF86AudioLowerVolume>", spawn "~/.xmonad/lib/Bindings/commands.sh audioDown")
+       , ("<XF86AudioRaiseVolume>", spawn "~/.xmonad/lib/Bindings/commands.sh audioUp")
+       , ("<XF86MonBrightnessDown>", spawn "~/.xmonad/lib/Bindings/commands.sh brightDown")
+       , ("<XF86MonBrightnessUp>", spawn "~/.xmonad/lib/Bindings/commands.sh brightUp")
+       -- other screen brightness: xrandr --output HDMI-1 --brightness 1
 
-      -- brightnessctl set +5%
-      -- dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Bright'
-
-    , ("M-q", spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
-    -- scratchpads
-    ]
+       , ("<Print>", spawn "flameshot screen")
+       , ("M-<Print>", spawn "flameshot gui")  
+    
+       -- xkb-switch -n -- switch to the next xkb layout
+       -- , ("M-c", spawn "gkbd-keyboard-display -l 'fr-colemak'") -- shows Colemak rather than current layout
+       , ("M-c", spawn "setxkbmap -query | grep 'layout' | cut -d ' ' -f 6 | xargs gkbd-keyboard-display -l")
+       -- , ("M-*", spawn "if [ $(setxkbmap -query | grep 'layout' | sed 's/^.*:*\\s //') = 'fr' ]; then setxkbmap fr-colemak; eww update layout='Colemak (fr)'; else setxkbmap fr; eww update layout='Azerty (fr)'; fi")
+         
+       -- screenkey helper
+       -- , ("M-S-.", spawn "if pgrep screenkey; then pkill screenkey; dunstify -t 750 'screenkey disabled'; else dunstify -t 750 'screenkey activated' && screenkey -t .5 -s small --no-whitespace --mods-mode emacs; fi")
+      
+       , ("M-q", spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
+       ]
 
 
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
-   [ ((modm, button1), (\w -> focus w >> Flex.mouseWindow Flex.position w))
-   , ((modm, button3), (\w -> focus w >> Flex.mouseWindow Flex.resize w))      
+   [ ((modm, button1), (\w -> do
+                          -- floats <- gets (W.floating . windowset)
+                          -- if (w `M.member` floats) then focus w >> do
+
+                          focus w
+                          -- make current floating window appear on top
+                          windows W.shiftMaster
+                          Flex.mouseWindow Flex.position w))
+   , ((modm, button3), (\w -> focus w >> Flex.mouseWindow Flex.resize w))
    ]
 
 
