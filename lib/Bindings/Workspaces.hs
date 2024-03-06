@@ -1,7 +1,8 @@
 module Bindings.Workspaces where
 
 import XMonad
-import XMonad.Actions.CycleWS
+import XMonad.Actions.SwapWorkspaces (swapTo)
+import XMonad.Actions.CycleWS (shiftToPrev, shiftToNext, prevWS, nextWS, toggleWS, findWorkspace, anyWS, Direction1D(Next, Prev))
 import qualified XMonad.StackSet as W
 import XMonad.Util.WorkspaceCompare
 import XMonad.Util.Loggers
@@ -14,12 +15,26 @@ workspace = -- grouped workspaces
             , ("M-<Left>", (switchInGroup "next"))
             , ("M-<Right>", (switchInGroup "prev"))
 
+            , ("M-u", (switchToGroup "next"))
+            , ("M-n", (switchInGroup "next"))
+            , ("M-i", (switchInGroup "prev"))
+            , ("M-,", (switchToGroup "prev"))
+
             -- normal workspaces
             , ("M-S-<Left>", prevWS)
             , ("M-S-<Right>", nextWS)
             , ("M-C-<Left>", shiftToPrev >> prevWS)
             , ("M-C-<Right>", shiftToNext >> nextWS)
             , ("M-<Tab>", toggleWS)
+
+            -- swap workspaces
+            , ("M-M1-<Right>", swapTo Next)
+            , ("M-M1-<Left>", swapTo Prev)
+              
+            -- move all windows to workspace 1
+            -- , ("M-C-o", gets windowset >>= mapM_ (windows . W.shiftWin "1") . W.allWindows)
+
+            -- doShiftX ws = ask >>= \w -> liftX $ Endo . (`W.shiftWin` w) <$> ws
             ]
 
 
@@ -33,7 +48,6 @@ wsBy = findWorkspace getSortByIndex Next anyWS
 
 nbGroups :: Int
 nbGroups = 3
-
 
 -- create groups within which you can shift
 switchInGroup direction = do
@@ -55,7 +69,3 @@ switchToGroup direction = do
   if direction == "next" then switchWorkspace $ nbGroups
   else if direction == "prev" then switchWorkspace $ -nbGroups
   else pure ()
-
-
--- shift window to workspace and follow it
-shift'n'view i = W.greedyView i . W.shift i
