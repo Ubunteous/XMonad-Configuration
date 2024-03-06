@@ -29,15 +29,15 @@ expand direction = do
           _ -> pure ()
 
 
-bsp_bind = [ ("M-M1-<Left>", sendMessage $ ExpandTowards L)
-           , ("M-M1-<Right>", sendMessage $ ExpandTowards R)
-           , ("M-M1-<Up>", sendMessage $ ExpandTowards U)
-           , ("M-M1-<Down>", sendMessage $ ExpandTowards D)
+bsp_bind = [ ("M-M1-S-<Left>", sendMessage $ ExpandTowards L)
+           , ("M-M1-S-<Right>", sendMessage $ ExpandTowards R)
+           , ("M-M1-S-<Up>", sendMessage $ ExpandTowards U)
+           , ("M-M1-S-<Down>", sendMessage $ ExpandTowards D)
            -- , ("M-l", sendMessage $ ExpandTowardsBy R 0.025)
            -- , ("M-h", sendMessage $ ExpandTowardsBy L 0.025)
 
-           , ("M-l", expand "left")
-           , ("M-h", expand "right")
+           -- , ("M-l", expand "left")
+           -- , ("M-h", expand "right")
              
            , ("M-M1-C-<Left>", sendMessage $ ShrinkFrom L)
            , ("M-M1-C-<Right>", sendMessage $ ShrinkFrom R)
