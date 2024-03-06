@@ -1,34 +1,67 @@
 module Hooks where
 
 import XMonad
-import qualified XMonad.StackSet as W (swapDown, floating)
-import XMonad.Hooks.ManageHelpers (isDialog, isFullscreen, doCenterFloat)
+-- import qualified XMonad.StackSet as W (swapDown)
+import XMonad.Hooks.ManageHelpers (isDialog, isFullscreen, doCenterFloat, composeOne, (-?>), doSink, doLower, currentWs, doFullFloat, windowTag, ($?), (^?))
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
 
-import XMonad.Hooks.RefocusLast
-import XMonad.Actions.UpdatePointer
+import XMonad.Hooks.RefocusLast (refocusLastLogHook, refocusLastWhen, refocusingIsActive)
+import XMonad.Actions.UpdatePointer (updatePointer)
 
-import XMonad.Hooks.FadeWindows
--- import XMonad.Hooks.MoreManageHelpers -- does not exist in 17.1
+import XMonad.Hooks.FadeWindows (fadeWindowsLogHook, fadeWindowsEventHook, transparency, isUnfocused, opaque)
+-- import XMonad.Hooks.MoreManageHelpers -- does not exist in
+   
+-- import XMonad.Util.WindowPropertiesRE ((~?)) -- regular expressions
 
--- Make some apps (including gimp) float by default
+import XMonad.Actions.CycleWS (shiftToNext, nextWS, moveTo, Direction1D(Next), emptyWS, findWorkspace, emptyWS, shiftTo)
+import qualified Data.Map as M -- see XMonad.Doc.Extending
+import qualified XMonad.StackSet as W
+import Control.Monad (liftM2)
+
+import Data.Monoid (Endo(Endo))
+import XMonad.Util.Loggers (logCurrent)
+
+import XMonad.Util.WorkspaceCompare (getSortByIndex)
+
+-- import XMonad.Hooks.Place
+-- myPlaceHook :: ManageHook
+-- myPlaceHook = placeHook simpleSmart
+-- myPlaceHook = placeHook $ inBounds (underMouse (0, 0))
+-- myPlaceHook = placeHook $ withGaps (16,0,16,0) (smart (0.5,0.5))
+
+-- for other xprop string properties:
+--  appName / resource and className are in WM_CLASS(STRING)
+--  title is WM_NAME(STRING)
+--  stringProperty "WM_WINDOW_ROLE" =? "presentationWidget" --> doFloat -- use either --> or -?>
 myManageHook :: ManageHook
-myManageHook = composeAll
-    [ className =? "Gimp-2.10" --> doCenterFloat -- find name with xprop | grep 'CLASS'
-    , className =? "Gkbd-keyboard-display" --> doF W.swapDown
-                                
-    , isDialog --> doF W.swapDown -- prevent floating dialog from appearing below window
-    , className =? "confirm" --> doFloat
-    , className =? "file_progress" --> doFloat
-    , className =? "download" --> doFloat
-    , className =? "error" --> doFloat
-    -- , isFullscreen -->  doFullFloat
-
-    , insertPosition End Newer -- open new windows at the end
+myManageHook = composeOne
+    [ isDialog -?> doCenterFloat -- prevent floating dialog from appearing below window
+    -- , isDialog --> doF W.shiftMaster <+> doF W.swapDown
+    
+    -- use this with xprop to test problematic windows
+    -- , return True -?> doIgnore
+      
+    , className =?? ["Gimp-2.10", "Gkbd-keyboard-display" 
+                    , "confirm", "file_progress", "download", "error"
+                    , "Text-input", "Save-preset"] -?> doCenterFloat -- last two are u-he popups
+               
+    -- vst/midi reaper pop ups 
+    , className =? "REAPER" <&&> title =?? ["Edit MIDI", "Routing Matrix", "Actions", "Browse packages", "REAPER Preferences"] <||> title ^? "FX" -?> doSink <+> doF W.swapDown
+    , className =? "REAPER" <&&> title ^?? ["VST", "JS"] -?> doSink <+> doShiftX (findWorkspace getSortByIndex Next emptyWS 1) -- detached fx
+    -- , className =? "REAPER" <&&> title ^? "Toolbar" -?> doFloat
+    -- , className =? "REAPER" -?> doSink <+> doF W.swapDown
+    -- , title =? "Insert Virtual Instrument on New Track..." -?> doF W.swapDown  -- doSink
                    
-    -- Options: doFloat vs doCenterFloat
-    -- Options for insertPosition: Focus (Newer/Older) and Position (Master, End, Above, Below)
-    ]
+    , className =? "yabridge-host.exe.so" -?> doIgnore
+    , className =? "fl64.exe" -?> doSink
+                                  
+    , className $? ".exe" <&&> willFloat -?> doIgnore --  isSuffixOf syntorial.exe, sine player.exe, superior drummer 3.exe
+
+    , return True -?> insertPosition End Newer -- open new windows at the end. Positions: Master, End, Above, Below
+    ] -- where
+    -- viewShift = doF . liftM2 (.) W.greedyView W.shift -- workspace name as arg (eg: "9")
+    -- unfloat = ask >>= doF . W.sink
+
 
 myLogHook = refocusLastLogHook <> updatePointer (0.5, 0.5) (0.5, 0.5) <> fadeWindowsLogHook myFadeHook
 
@@ -36,12 +69,33 @@ myHandleEventHook = refocusLastWhen refocusingIsActive <> fadeWindowsEventHook -
 
 -- this FadeHook requires Picom and serves to change its settings
 -- find a window className with xprop | grep 'CLASS'
-myFadeHook = composeAll
-    [ transparency 0.1 -- default transparency
-    , isUnfocused --> transparency 0.3
-    -- , (className =? "i3lock") --> opaque -- does not work
-    -- , (title =? "Alacrity's") --> transparency 0.8
-    -- , isFullscreen --> opaque
-    , (className =? "Evince") --> opaque
-    , (className =? "Pix") --> opaque
+-- composeOne stops at first match and requires -?> instead of -->
+-- myFadeHook = composeAll
+myFadeHook = composeOne
+    [ className =?? ["Evince", "Pix"] -?> opaque
+    , isUnfocused -?> transparency 0.3
+    , isFullscreen -?> opaque -- for videos in firefox
+    , return True -?> transparency 0.1 -- default transparency
     ]
+
+-- custom operator to use a list for className
+(=??) :: Eq a => Query a -> [a] -> Query Bool
+q =?? [] = pure False
+q =?? (x:xs) = q =? x <||> (q =?? xs)
+
+-- another custom operator to use a suffix list for className
+(^??) :: Eq a => Query [a] -> [[a]] -> Query Bool -- query string ?
+q ^?? [] = pure False
+q ^?? (x:xs) = q ^? x <||> (q ^?? xs)
+
+-- doShift :: Query WorkspaceId -> ManageHook
+-- doShift ws = ask >>= \w -> Endo . (`W.shiftWin` w) <$> ws
+
+-- doView :: Query WorkspaceId -> ManageHook
+-- doView ws = Endo . W.greedyView <$> ws
+
+doShiftX :: X WorkspaceId -> ManageHook
+doShiftX ws = ask >>= \w -> liftX $ Endo . (`W.shiftWin` w) <$> ws
+
+-- doViewX :: X WorkspaceId -> ManageHook
+-- doViewX ws = liftX $ Endo . W.greedyView <$> ws
