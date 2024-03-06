@@ -14,35 +14,41 @@ import XMonad.Layout.ToggleLayouts (ToggleLayout(..))
 import XMonad.Layout.Hidden (hideWindow, popOldestHiddenWindow)
 
 
-window = [ ("M-b", sendMessage $ MirrorShrink)
-         , ("M-n", sendMessage $ MirrorExpand)
-
-         , ("M-o", (selectWindow def{cancelKey = xK_Escape}) >>= (`whenJust` windows . W.focusWindow))
+window = [ ("M-o", (selectWindow def{cancelKey = xK_Escape}) >>= (`whenJust` windows . W.focusWindow))
          , ("M-S-o", (selectWindow def{
                         emFont = "xft: Cambria-80",
                                  sKeys = AnyKeys [xK_r, xK_e, xK_r, xK_y, xK_u, xK_i],
                                          cancelKey = xK_Escape}) >>= (`whenJust` killWindow))
+
+         -- move focus in stack
+         , ("M-m", windows W.focusDown)
+         -- move window in stack
+         , ("M-S-m", windows W.swapDown)
+             
+         , ("M-w", sendMessage $ MirrorExpand)
+         , ("M-S-w", sendMessage $ MirrorShrink)
            
          , ("M-t", withFocused toggleFloat)
          , ("M-<Return>", whenX (swapHybrid False) promote)
 
-         , ("M-u", rotSlavesUp)
-         , ("M-i", rotSlavesDown)
+         , ("M-l", rotSlavesUp)
+         , ("M-v", rotSlavesDown)
            
          -- , ("M-u", rotUnfocusedUp)
          -- , ("M-i", rotUnfocusedDown)
          , ("M-S-f", sendMessage ToggleLayout)
                           
-           -- raise
+         -- raise
          , ("M-a", raise (className =? "Emacs"))
+         , ("M-g", raise (appName =? "Godot_Engine"))
          , ("M-r", raiseBrowser)
             
-           -- hidden
-         , ("M-y" , withFocused hideWindow)
-         , ("M-S-y" , popOldestHiddenWindow) -- popHiddenWindow
+         -- hidden
+         -- , ("M-y" , withFocused hideWindow)
+         -- , ("M-S-y" , popOldestHiddenWindow) -- popHiddenWindow
          ]
 
 
 toggleFloat w = windows (\s -> if M.member w (W.floating s)
                             then W.sink w s
-                            else (W.float w (W.RationalRect (1/3) (1/4) (1/2) (4/5)) s))
+                            else (W.float w (W.RationalRect (1/3) (1/4) (1/2) (4/5)) s))                
