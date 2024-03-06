@@ -20,14 +20,14 @@ import XMonad.Layout.IfMax
 import XMonad.Layout.Renamed
 
 myLayout = custom . hiddenWindows $
-           toggleLayouts bsp tallGrid ||| full
+    toggleLayouts bsp tallGrid ||| full
     where
       custom x = showWName' swn_config .
                  smartSpacing 3 .
                  smartBorders .
                  avoidStruts $
                  x
-                 
+      ----------------------------           
       full = Full
       bsp = renamed [Replace "BSP"] emptyBSP
       rTall = limitSelect 1 2 $ ResizableTall 1 (1/20) (1/2) []
