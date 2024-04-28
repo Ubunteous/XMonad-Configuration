@@ -69,6 +69,10 @@ myStartupHook = do
   spawnOnce "if [ $(xrandr --query | grep -c 'HDMI-1 connected') -eq 1 ]; then xrandr --output eDP-1 --off --output HDMI-1 --auto; fi"
                     
   -- spawnOnce "kmonad $HOME/.nix.d/files/kmonad.kbd &"
+
+  -- spawnOnce "watch -n 7200 dunstify -u critical -t 30000 'It is time for a break'"
+  -- spawnOnce "watch -n 65 dunstify -u critical -t 30000 'Break Time'"
+  spawnOnce "~/.xmonad/lib/Bindings/commands.sh breakTime" 
             
   -- check if there is an incorrect or duplicate key binding
   return ()

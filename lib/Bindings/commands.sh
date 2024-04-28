@@ -1,8 +1,12 @@
 #! /usr/bin/env sh
 
+breakTime() {
+    sleep 1200 && watch -n 1200 dunstify -u critical -t 30000 'Break Time'
+}
+
 audioMute() {
     pamixer -t
-    dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Audio'
+    dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Toggle Mute'
 }
 
 audioDown() {
@@ -11,7 +15,7 @@ audioDown() {
     fi
 
     pamixer -d 10
-    dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Sound'
+    dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Sound Down'
 }
 
 audioUp() {
@@ -20,7 +24,7 @@ audioUp() {
     fi
 
     pamixer -i 10
-    dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Sound'
+    dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Sound Up'
 }
 
 brightDown() {
@@ -30,7 +34,7 @@ brightDown() {
     else
 	brightnessctl set 5%-
 
-	dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness'
+	dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness Down'
     fi
 }
 
@@ -41,7 +45,7 @@ brightUp() {
     else
 	brightnessctl set +5%
 
-	dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness'
+	dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness Up'
     fi
 }
 
@@ -60,9 +64,7 @@ lock() {
 	i3lock -ueni ~/Pictures/gem_full.png
 	xrandr --output HDMI-1 --brightness 1
     else
-	brightnessctl -s set 5
-	i3lock -ueni ~/Pictures/gem_full.png
-	brightnessctl -r
+	brightnessctl -s set 5 && i3lock -ueni ~/Pictures/gem_full.png; brightnessctl -r
     fi
 }
 
