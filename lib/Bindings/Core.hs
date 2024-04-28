@@ -21,11 +21,12 @@ core = [ ("M-e", spawn "nemo")
        , ("M-b", placeFocused $ inBounds (underMouse (0.5, 0.5)))
        -- , ("M-b", spawn "reaper")
        -- , ("M-b", shiftTo Next emptyWS)
-      
+         
        , ("M-S-s", spawn "~/.xmonad/lib/Bindings/commands.sh hdmi")
        , ("M-C-S-s", spawn "xrandr --output eDP-1 --auto")
   
        , ("M-S-<Return>", spawn "wezterm")
+       , ("M-j", spawn "wezterm")
        -- , ("M-S-<Return>", spawn "[[ $(($RANDOM % 2)) = 1 ]] && alacritty || kitty") -- spawn random terminal
        -- , ("M-S-<Return>", spawn "if [ $(shuf -i 0-1 -n 1) = 1 ]; then alacritty; else kitty; fi")
        -- , ("M-S-<Return>", spawn "~/.xmonad/lib/Bindings/commands.sh randTerm")
@@ -44,7 +45,7 @@ core = [ ("M-e", spawn "nemo")
        , ("M-y", spawn "rofi -show drun")
        , ("M-p", spawn "rofi -show drun")
        , ("M-!", spawn "rofi -show drun") -- colemak
-       , ("M-/", spawn "rofi -show drun") -- colemak
+       -- , ("M-/", spawn "rofi -show drun") -- colemak
        , ("M-$", spawn "~/.config/rofi/powermenu.sh")      
        -- , ("M-C-p", spawn "polybar-msg cmd toggle")
        , ("M-C-p", spawn "~/.xmonad/lib/Bindings/commands.sh toggleBar")
@@ -66,6 +67,7 @@ core = [ ("M-e", spawn "nemo")
        -- xkb-switch -n -- switch to the next xkb layout
        -- , ("M-c", spawn "gkbd-keyboard-display -l 'fr-colemak'") -- shows Colemak rather than current layout
        , ("M-c", spawn "setxkbmap -query | grep 'layout' | cut -d ' ' -f 6 | xargs gkbd-keyboard-display -l")
+       , ("M-S-c", spawn "pix ~/Pictures/Screenshots/split.png")
        -- , ("M-*", spawn "if [ $(setxkbmap -query | grep 'layout' | sed 's/^.*:*\\s //') = 'fr' ]; then setxkbmap fr-colemak; eww update layout='Colemak (fr)'; else setxkbmap fr; eww update layout='Azerty (fr)'; fi")
          
        -- screenkey helper
