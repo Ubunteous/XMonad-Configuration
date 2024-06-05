@@ -19,7 +19,9 @@ workspace = -- grouped workspaces
             , ("M-n", (switchInGroup "next"))
             , ("M-i", (switchInGroup "prev"))
             , ("M-,", (switchToGroup "prev"))
-
+            , ("M-C-n", shiftToPrev >> prevWS)
+            , ("M-C-i", shiftToNext >> nextWS)
+              
             -- normal workspaces
             , ("M-S-<Left>", prevWS)
             , ("M-S-<Right>", nextWS)
