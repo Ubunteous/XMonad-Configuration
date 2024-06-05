@@ -76,7 +76,7 @@ myStartupHook = do
             
   -- check if there is an incorrect or duplicate key binding
   return ()
-  checkKeymap myConfig (myKeys myConfig)
+  -- checkKeymap myConfig (myKeys myConfig) -- buggy in v17.2. always triggers error for every binding
 
 
 myKeys conf@(XConfig {modMask = modMask}) =
