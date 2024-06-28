@@ -91,3 +91,4 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
 
 scratchpads = [ NS "nemo" "nemo" (className =? "Nemo") nonFloating ]
+            

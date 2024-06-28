@@ -27,6 +27,7 @@ audioUp() {
     dunstify -t 750 -h string:x-dunst-stack-tag:'Volume' -h int:value:$(pamixer --get-volume-human) 'Sound Up'
 }
 
+# get brightness device by using brightnessctl -l
 brightDown() {
     if [ $(xrandr --query | grep -c 'HDMI-1 connected') -eq 1 ]; then
 	xrandr --output HDMI-1 --brightness .8
@@ -34,7 +35,7 @@ brightDown() {
     else
 	brightnessctl set 5%-
 
-	dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness Down'
+	dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl1 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness Down'
     fi
 }
 
@@ -45,7 +46,7 @@ brightUp() {
     else
 	brightnessctl set +5%
 
-	dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness Up'
+	dunstify -t 750 -u low -h string:x-dunst-stack-tag:'Brightness' -h int:value:$(brightnessctl -m -d amdgpu_bl1 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%') 'Brightness Up'
     fi
 }
 
