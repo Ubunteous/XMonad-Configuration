@@ -4,6 +4,7 @@ import XMonad
 import XMonad.Util.NamedScratchpad (NamedScratchpad(..), namedScratchpadAction, nonFloating)
 import XMonad.Actions.PerWindowKeys (bindFirst)
 import XMonad.Actions.WithAll (killOthers)
+import XMonad.Hooks.ManageHelpers (($?))
 
 -- Float
 import qualified XMonad.StackSet as W
@@ -25,17 +26,19 @@ core = [ ("M-e", spawn "nemo")
        , ("M-S-s", spawn "~/.xmonad/lib/Bindings/commands.sh hdmi")
        , ("M-C-S-s", spawn "xrandr --output eDP-1 --auto")
   
-       , ("M-S-<Return>", spawn "wezterm")
-       , ("M-j", spawn "wezterm")
+       , ("M-S-<Return>", spawn "wezterm || xterm")
+       , ("M-j", spawn "wezterm || xterm")
        -- , ("M-S-<Return>", spawn "[[ $(($RANDOM % 2)) = 1 ]] && alacritty || kitty") -- spawn random terminal
        -- , ("M-S-<Return>", spawn "if [ $(shuf -i 0-1 -n 1) = 1 ]; then alacritty; else kitty; fi")
        -- , ("M-S-<Return>", spawn "~/.xmonad/lib/Bindings/commands.sh randTerm")
       
        -- FLoating
-       , ("M-z", placeFocused simpleSmart)
-                   
+       , ("M-C-z", placeFocused simpleSmart)
+
        -- do not kill emacs/reaper by mistake with M-x
-       , ("M-x", bindFirst [(className =? "Emacs" <||> className =? "REAPER", pure ()), (pure True, kill)])
+       -- <Optional project name> REAPER vx.xx - Registered to <name> (Licensed for personal/small business use)
+       , ("M-x", bindFirst [(className =? "Emacs" <||> title $? "use)", pure ()), (pure True, kill)])
+       , ("M-C-x", kill)
        , ("M-<", spawn "xkbset bell sticky -twokey -latchlock feedback led stickybeep")      
        , ("M-S-k", killOthers)
 
