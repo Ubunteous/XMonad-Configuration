@@ -15,6 +15,9 @@ workspace = -- grouped workspaces
             , ("M-<Left>", (switchInGroup "next"))
             , ("M-<Right>", (switchInGroup "prev"))
 
+            -- watch -n 1 xdotool key "Super_L+z" # refresh SINE
+            , ("M-z", (switchInGroup "prev") >> (switchInGroup "next"))
+                            
             , ("M-u", (switchToGroup "next"))
             , ("M-n", (switchInGroup "next"))
             , ("M-i", (switchInGroup "prev"))
