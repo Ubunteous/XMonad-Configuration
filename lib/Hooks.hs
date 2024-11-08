@@ -2,7 +2,7 @@ module Hooks where
 
 import XMonad
 -- import qualified XMonad.StackSet as W (swapDown)
-import XMonad.Hooks.ManageHelpers (isDialog, isFullscreen, doCenterFloat, composeOne, (-?>), doSink, doLower, currentWs, doFullFloat, windowTag, ($?), (^?))
+import XMonad.Hooks.ManageHelpers (isDialog, isFullscreen, doCenterFloat, composeOne, (-?>), doSink, doLower, currentWs, doFullFloat, windowTag, ($?), (^?)) -- ^? prefix, ~? infix, $? suffix, /=? not equal
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
 
 import XMonad.Hooks.RefocusLast (refocusLastLogHook, refocusLastWhen, refocusingIsActive)
@@ -11,7 +11,7 @@ import XMonad.Actions.UpdatePointer (updatePointer)
 import XMonad.Hooks.FadeWindows (fadeWindowsLogHook, fadeWindowsEventHook, transparency, isUnfocused, opaque)
 -- import XMonad.Hooks.MoreManageHelpers -- does not exist in
    
--- import XMonad.Util.WindowPropertiesRE ((~?)) -- regular expressions
+import XMonad.Util.WindowPropertiesRE ((~?)) -- regular expressions
 
 import XMonad.Actions.CycleWS (shiftToNext, nextWS, moveTo, Direction1D(Next), emptyWS, findWorkspace, emptyWS, shiftTo)
 import qualified Data.Map as M -- see XMonad.Doc.Extending
@@ -35,12 +35,21 @@ import XMonad.Util.WorkspaceCompare (getSortByIndex)
 --  stringProperty "WM_WINDOW_ROLE" =? "presentationWidget" --> doFloat -- use either --> or -?>
 myManageHook :: ManageHook
 myManageHook = composeOne
-    [ isDialog -?> doCenterFloat -- prevent floating dialog from appearing below window
+    [
+    -- title =? "WaitingForKey" -?> doIgnore -- window needed but placed in corner
+    -- className =? "" -?> doIgnore -- reaper which key (avoid/reduce glitch)
+    title ^? "KeySequenceListener" -?> doIgnore  -- reaper which key (avoid mouse move to corner)
+    -- , title =? "Matching shortcuts" -?> doFloat                      
+    , title =? "Key Sequences" -?> doSink
+
+    , isDialog -?> doCenterFloat -- prevent floating dialog from appearing below window
+    -- , className ~? ".*" -?> doIgnore
     -- , isDialog --> doF W.shiftMaster <+> doF W.swapDown
-    
+      
     -- use this with xprop to test problematic windows
     -- , return True -?> doIgnore
-      
+    -- , return True -?> doCenterFloat
+                  
     , className =?? ["Gimp-2.10", "Gkbd-keyboard-display" 
                     , "confirm", "file_progress", "download", "error"
                     , "Text-input", "Save-preset"] -?> doCenterFloat -- last two are u-he popups
@@ -54,8 +63,14 @@ myManageHook = composeOne
                    
     , className =? "yabridge-host.exe.so" -?> doIgnore
     , className =? "fl64.exe" -?> doSink
-                                  
-    , className $? ".exe" <&&> willFloat -?> doIgnore --  isSuffixOf syntorial.exe, sine player.exe, superior drummer 3.exe
+
+    --  isSuffixOf syntorial.exe, sine player.exe, superior drummer 3.exe
+    -- , className $? ".exe" <&&> willFloat -?> doSink
+
+    , className =? "superior drummer 3.exe" <&&> willFloat -?> doIgnore
+    , className =? "sine player.exe" <&&> title =? "SINE Player" -?> doCenterFloat
+    , className =? "sine player.exe" -?> doIgnore -- for menus
+    -- , className $? ".exe" <&&> willFloat -?> doCenterFloat
 
     , return True -?> insertPosition End Newer -- open new windows at the end. Positions: Master, End, Above, Below
     ] -- where
