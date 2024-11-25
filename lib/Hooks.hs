@@ -11,7 +11,7 @@ import XMonad.Actions.UpdatePointer (updatePointer)
 import XMonad.Hooks.FadeWindows (fadeWindowsLogHook, fadeWindowsEventHook, transparency, isUnfocused, opaque)
 -- import XMonad.Hooks.MoreManageHelpers -- does not exist in
    
-import XMonad.Util.WindowPropertiesRE ((~?)) -- regular expressions
+-- import XMonad.Util.WindowPropertiesRE ((~?)) -- regular expressions
 
 import XMonad.Actions.CycleWS (shiftToNext, nextWS, moveTo, Direction1D(Next), emptyWS, findWorkspace, emptyWS, shiftTo)
 import qualified Data.Map as M -- see XMonad.Doc.Extending
@@ -41,6 +41,11 @@ myManageHook = composeOne
     title ^? "KeySequenceListener" -?> doIgnore  -- reaper which key (avoid mouse move to corner)
     -- , title =? "Matching shortcuts" -?> doFloat                      
     , title =? "Key Sequences" -?> doSink
+
+    -- avoid issues with windows which start as title="" and get title="menu"
+    -- this affects goodhertz plugins menus for instance
+    , title =? "" <&&> className =? "yabridge-host.exe" -?> doIgnore
+    -- , title ~? "*" -?> doIgnore -- regexp
 
     , isDialog -?> doCenterFloat -- prevent floating dialog from appearing below window
     -- , className ~? ".*" -?> doIgnore
