@@ -77,6 +77,12 @@ core = [ ("M-e", spawn "nemo")
        -- , ("M-S-.", spawn "if pgrep screenkey; then pkill screenkey; dunstify -t 750 'screenkey disabled'; else dunstify -t 750 'screenkey activated' && screenkey -t .5 -s small --no-whitespace --mods-mode emacs; fi")
       
        , ("M-q", spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
+
+       -- refresh Sine
+       -- , ("M-C-o", namedScratchpadAction scratchpads "sine")
+       , ("M-C-o", spawn "wmctrl -r 'Sine Player' -t 8 && wmctrl -R 'Sine Player'")
+
+       , ("M-C-e", namedScratchpadAction scratchpads "nemo")
        ]
 
 
@@ -94,4 +100,6 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
 
 scratchpads = [ NS "nemo" "nemo" (className =? "Nemo") nonFloating ]
+              -- , NS "sine" "wine ~/.wine/drive_c/Program\\ Files/SINE\\ Player/SINE\\ Player.exe" (title =? "SINE Player") nonFloating
+              -- ]
             
