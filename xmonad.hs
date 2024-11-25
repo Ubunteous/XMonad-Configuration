@@ -74,8 +74,9 @@ myStartupHook = do
   -- spawnOnce "watch -n 65 dunstify -u critical -t 30000 'Break Time'"
   spawnOnce "~/.xmonad/lib/Bindings/commands.sh breakTime" 
             
-  -- check if there is an incorrect or duplicate key binding
   return ()
+  -- check if there is an incorrect or duplicate key binding
+  -- perhaps needs to be written as return() >> checkKeymap...
   -- checkKeymap myConfig (myKeys myConfig) -- buggy in v17.2. always triggers error for every binding
 
 
