@@ -8,3 +8,4 @@ xmonad-*
 xmonad.errors
 prompt-history
 build-*
+lib/Bindings/Modes.hs
