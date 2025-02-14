@@ -28,7 +28,7 @@ window = [ ("M-o", (selectWindow def{cancelKey = xK_Escape}) >>= (`whenJust` win
          , ("M-w", sendMessage $ MirrorExpand)
          , ("M-S-w", sendMessage $ MirrorShrink)
            
-         , ("M-t", withFocused toggleFloat)
+         , ("M-S-t", withFocused toggleFloat)
          , ("M-<Return>", whenX (swapHybrid False) promote)
 
          , ("M-l", rotSlavesUp)
@@ -41,7 +41,7 @@ window = [ ("M-o", (selectWindow def{cancelKey = xK_Escape}) >>= (`whenJust` win
          -- raise
          , ("M-a", raise (className =? "Emacs"))
          , ("M-g", raise (appName =? "Godot_Engine"))
-         , ("M-r", raiseBrowser)
+         -- , ("M-r", raiseBrowser)
             
          -- hidden
          -- , ("M-y" , withFocused hideWindow)

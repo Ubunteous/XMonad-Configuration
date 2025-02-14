@@ -30,6 +30,8 @@ workspace = -- grouped workspaces
             , ("M-S-<Right>", nextWS)
             , ("M-C-<Left>", shiftToPrev >> prevWS)
             , ("M-C-<Right>", shiftToNext >> nextWS)
+            , ("M-r", shiftToPrev >> prevWS)
+            , ("M-t", shiftToNext >> nextWS)
             , ("M-<Tab>", toggleWS)
 
             -- swap workspaces
