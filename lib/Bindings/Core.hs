@@ -35,9 +35,9 @@ core = [ ("M-e", spawn "nemo")
        -- FLoating
        , ("M-C-z", placeFocused simpleSmart)
 
-       -- do not kill emacs/reaper by mistake with M-x
+       -- do not kill emacs/reaper/godot editor by mistake with M-x
        -- <Optional project name> REAPER vx.xx - Registered to <name> (Licensed for personal/small business use)
-       , ("M-x", bindFirst [(className =? "Emacs" <||> title $? "use)", pure ()), (pure True, kill)])
+       , ("M-x", bindFirst [(className =? "Emacs" <||> className =? "Godot" <||> title $? "use)", pure ()), (pure True, kill)])
        , ("M-C-x", kill)
        , ("M-<", spawn "xkbset bell sticky -twokey -latchlock feedback led stickybeep")      
        , ("M-S-k", killOthers)
