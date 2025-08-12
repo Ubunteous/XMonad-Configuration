@@ -42,6 +42,9 @@ myManageHook = composeOne
     -- , title =? "Matching shortcuts" -?> doFloat                      
     , title =? "Key Sequences" -?> doSink
 
+    -- godot
+    , title =? "Script Editor - Godot Engine" -?> let ws = nextEmptyWS in doViewX ws <+> doShiftX ws
+
     -- avoid issues with windows which start as title="" and get title="menu"
     -- this affects goodhertz plugins menus for instance
     , title =? "" <&&> className =? "yabridge-host.exe" -?> doIgnore
@@ -61,11 +64,13 @@ myManageHook = composeOne
                
     -- vst/midi reaper pop ups 
     , className =? "REAPER" <&&> title =?? ["Edit MIDI", "Routing Matrix", "Actions", "Browse packages", "REAPER Preferences"] <||> title ^? "FX" -?> doSink <+> doF W.swapDown
-    , className =? "REAPER" <&&> title ^?? ["VST", "JS"] -?> doSink <+> doShiftX (findWorkspace getSortByIndex Next emptyWS 1) -- detached fx
+    , className =? "REAPER" <&&> title ^?? ["VST", "JS"] -?> doSink <+> doShiftX nextEmptyWS -- detached fx
     -- , className =? "REAPER" <&&> title ^? "Toolbar" -?> doFloat
     -- , className =? "REAPER" -?> doSink <+> doF W.swapDown
     -- , title =? "Insert Virtual Instrument on New Track..." -?> doF W.swapDown  -- doSink
-                   
+
+    -- , className =? "Midihub Editor" -?> doIgnore
+
     , className =? "yabridge-host.exe.so" -?> doIgnore
     , className =? "fl64.exe" -?> doSink
 
@@ -78,7 +83,8 @@ myManageHook = composeOne
     -- , className $? ".exe" <&&> willFloat -?> doCenterFloat
 
     , return True -?> insertPosition End Newer -- open new windows at the end. Positions: Master, End, Above, Below
-    ] -- where
+    ] where
+    nextEmptyWS = findWorkspace getSortByIndex Next emptyWS 1
     -- viewShift = doF . liftM2 (.) W.greedyView W.shift -- workspace name as arg (eg: "9")
     -- unfloat = ask >>= doF . W.sink
 
@@ -117,5 +123,5 @@ q ^?? (x:xs) = q ^? x <||> (q ^?? xs)
 doShiftX :: X WorkspaceId -> ManageHook
 doShiftX ws = ask >>= \w -> liftX $ Endo . (`W.shiftWin` w) <$> ws
 
--- doViewX :: X WorkspaceId -> ManageHook
--- doViewX ws = liftX $ Endo . W.greedyView <$> ws
+doViewX :: X WorkspaceId -> ManageHook
+doViewX ws = liftX $ Endo . W.greedyView <$> ws
