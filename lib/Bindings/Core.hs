@@ -52,6 +52,7 @@ core = [ ("M-e", spawn "nemo")
        , ("M-$", spawn "~/.config/rofi/powermenu.sh")      
        -- , ("M-C-p", spawn "polybar-msg cmd toggle")
        , ("M-C-p", spawn "~/.xmonad/lib/Bindings/commands.sh toggleBar")
+       , ("M-S-p", spawn "~/.xmonad/lib/Bindings/commands.sh toggleBar")
        , ("M-S-l", spawn "~/.xmonad/lib/Bindings/commands.sh lock")
        , ("M-S-i", spawn "~/.xmonad/lib/Bindings/commands.sh lock")
 
