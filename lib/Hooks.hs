@@ -42,6 +42,8 @@ myManageHook = composeOne
     -- , title =? "Matching shortcuts" -?> doFloat                      
     , title =? "Key Sequences" -?> doSink
 
+    , className =? "Evince" -?> doF W.focusDown <+> doF W.swapDown
+
     -- godot
     , title =? "Script Editor - Godot Engine" -?> let ws = nextEmptyWS in doViewX ws <+> doShiftX ws
 
