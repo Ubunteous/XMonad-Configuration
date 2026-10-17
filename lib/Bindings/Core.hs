@@ -16,22 +16,23 @@ import qualified XMonad.Actions.FlexibleManipulate as Flex
 -- import XMonad.Actions.CycleWS (shiftTo, Direction1D(Next), emptyWS)
 
 import XMonad.Hooks.Place (inBounds, underMouse)
-    
+
 core :: [(String, X())]
 core = [ ("M-e", spawn "nemo")
        , ("M-b", placeFocused $ inBounds (underMouse (0.5, 0.5)))
        -- , ("M-b", spawn "reaper")
        -- , ("M-b", shiftTo Next emptyWS)
-         
+
        , ("M-S-s", spawn "~/.xmonad/lib/Bindings/commands.sh hdmi")
        , ("M-C-S-s", spawn "xrandr --output eDP-1 --auto")
-  
+
        , ("M-S-<Return>", spawn "wezterm || xterm")
        , ("M-j", spawn "wezterm || xterm")
+       , ("M-s", spawn "wezterm || xterm")
        -- , ("M-S-<Return>", spawn "[[ $(($RANDOM % 2)) = 1 ]] && alacritty || kitty") -- spawn random terminal
        -- , ("M-S-<Return>", spawn "if [ $(shuf -i 0-1 -n 1) = 1 ]; then alacritty; else kitty; fi")
        -- , ("M-S-<Return>", spawn "~/.xmonad/lib/Bindings/commands.sh randTerm")
-      
+
        -- FLoating
        , ("M-C-z", placeFocused simpleSmart)
 

@@ -38,13 +38,13 @@ bsp_bind = [ ("M-M1-S-<Left>", sendMessage $ ExpandTowards L)
 
            -- , ("M-l", expand "left")
            -- , ("M-h", expand "right")
-             
+
            , ("M-M1-C-<Left>", sendMessage $ ShrinkFrom L)
            , ("M-M1-C-<Right>", sendMessage $ ShrinkFrom R)
            , ("M-M1-C-<Up>", sendMessage $ ShrinkFrom U)
            , ("M-M1-C-<Down>", sendMessage $ ExpandTowards D)
 
-           , ("M-s", sendMessage $ Swap)
+           , ("M-M1-s", sendMessage $ Swap)
            -- , ("M-r", sendMessage $ Rotate)
            , ("M-M1-c", sendMessage $ SplitShift Prev)
            , ("M-M1-v", sendMessage $ SplitShift Next)
